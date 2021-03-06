@@ -1,6 +1,7 @@
 plugins {
     id 'com.android.application'
     id 'kotlin-android'
+    id 'kotlin-kapt'
 }
 
 android {
@@ -78,4 +79,25 @@ dependencies {
 
     androidTestImplementation 'androidx.test.ext:junit:1.1.2'
     androidTestImplementation "androidx.compose.ui:ui-test-junit4:$compose_version"
+
+    // KMP
+    implementation project(':SharedCodeClient')
+
+    // HILT
+    implementation "com.google.dagger:hilt-android:$hilt_core_version"
+    implementation "androidx.hilt:hilt-common:$hilt_version"
+    implementation "androidx.hilt:hilt-lifecycle-viewmodel:$hilt_version"
+    kapt "com.google.dagger:hilt-compiler:$hilt_core_version"
+    kapt "androidx.hilt:hilt-compiler:$hilt_version"
+    androidTestImplementation "com.google.dagger:hilt-android-testing:$hilt_core_version"
+    kaptAndroidTest "com.google.dagger:hilt-compiler:$hilt_core_version"
+
+
+    def versionLiveData = "1.0.0-beta01"
+    implementation "androidx.compose.runtime:runtime-livedata:$versionLiveData"
+
+    // compose image loading
+    def landscapistVersion  = '1.1.6'
+    implementation "com.github.skydoves:landscapist-coil:$landscapistVersion"
+
 }

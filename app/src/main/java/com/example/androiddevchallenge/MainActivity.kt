@@ -17,20 +17,29 @@ package com.example.androiddevchallenge
 
 import android.os.Bundle
 import androidx.activity.compose.setContent
+import androidx.activity.viewModels
 import androidx.appcompat.app.AppCompatActivity
 import androidx.compose.material.MaterialTheme
 import androidx.compose.material.Surface
 import androidx.compose.material.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.remember
 import androidx.compose.ui.tooling.preview.Preview
+import com.example.androiddevchallenge.composables.NavigateApp
 import com.example.androiddevchallenge.ui.theme.MyTheme
+import com.example.androiddevchallenge.viewModel.HomeViewModel
 
 class MainActivity : AppCompatActivity() {
+
+    val homeViewModel: HomeViewModel by viewModels()
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContent {
             MyTheme {
-                MyApp()
+                homeViewModel.getAnimalListFlow()
+                val appState = remember { AppState() }
+                NavigateApp(appState = appState, homeViewModel = homeViewModel)
             }
         }
     }
