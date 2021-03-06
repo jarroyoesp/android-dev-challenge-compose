@@ -20,7 +20,7 @@ fun NetworkImage(
   url: String,
   modifier: Modifier,
   circularRevealedEnabled: Boolean = false,
-  contentScale: ContentScale = ContentScale.FillWidth
+  contentScale: ContentScale = ContentScale.Crop
 ) {
 
   CoilImage(

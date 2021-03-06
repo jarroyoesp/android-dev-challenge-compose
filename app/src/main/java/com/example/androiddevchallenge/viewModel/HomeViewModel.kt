@@ -18,8 +18,6 @@ import kotlinx.coroutines.flow.collect
 class HomeViewModel @ViewModelInject constructor(
 ) : ViewModel() {
 
-    private var _randomNumber: MutableLiveData<Int> = MutableLiveData()
-
     private var _animalListLiveData: MutableLiveData<List<Breed>?> = MutableLiveData()
     val animalListLiveData: LiveData<List<Breed>?> get() = _animalListLiveData
 
