@@ -6,9 +6,7 @@ import android.widget.Toast
 import androidx.activity.ComponentActivity
 import androidx.compose.foundation.*
 import androidx.compose.foundation.layout.*
-import androidx.compose.foundation.lazy.LazyColumn
-import androidx.compose.foundation.lazy.LazyRow
-import androidx.compose.foundation.lazy.items
+import androidx.compose.foundation.lazy.*
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.*
 import androidx.compose.material.SnackbarDefaults.backgroundColor
@@ -62,7 +60,7 @@ fun HomeComposable(homeViewModel: HomeViewModel, breedClicked: (Breed) -> Unit =
             )
         },
         content = {
-            HomeScreenContent(animalList, breedClicked)
+            HomeScreenContent(homeViewModel, animalList, breedClicked)
         },
         bottomBar = {
             BottomBreedNavigation()
@@ -71,20 +69,20 @@ fun HomeComposable(homeViewModel: HomeViewModel, breedClicked: (Breed) -> Unit =
 }
 
 @Composable
-fun HomeScreenContent(animalList: List<Breed>?, breedClicked: (Breed) -> Unit = {}) {
+fun HomeScreenContent(homeViewModel: HomeViewModel, animalList: List<Breed>?, breedClicked: (Breed) -> Unit = {}) {
     Column(
         modifier = Modifier.padding(start = 10.dp, end = 10.dp, top = 10.dp, bottom = 10.dp),
         horizontalAlignment = Alignment.Start
     ) {
         Spacer(modifier = Modifier.height(10.dp))
-        SearchBox()
+        SearchBox(homeViewModel = homeViewModel)
         Spacer(modifier = Modifier.height(10.dp))
         BreedsList(animalList, breedClicked)
     }
 }
 
 @Composable
-fun SearchBox() {
+fun SearchBox(homeViewModel: HomeViewModel) {
     var searchText by remember { mutableStateOf(TextFieldValue("")) }
 
     Column {
@@ -101,6 +99,7 @@ fun SearchBox() {
             value = searchText,
             onValueChange = {
                 searchText = it
+                homeViewModel.onSearchBreedText(it.text)
             },
             modifier = Modifier
                 .offset(x = 20.dp)
@@ -126,6 +125,7 @@ fun SearchBox() {
     }
 }
 
+@OptIn(ExperimentalFoundationApi::class)
 @Composable
 fun BreedsList(animalList: List<Breed>?, breedClicked: (Breed) -> Unit = {}) {
     Text(
@@ -137,9 +137,10 @@ fun BreedsList(animalList: List<Breed>?, breedClicked: (Breed) -> Unit = {}) {
         )
     )
     Spacer(modifier = Modifier.height(5.dp))
-
-    LazyRow(
-        modifier = Modifier.fillMaxWidth()
+    LazyVerticalGrid(
+        cells = GridCells.Fixed(2),
+        modifier = Modifier.fillMaxWidth(),
+        contentPadding = PaddingValues(8.dp),
     ) {
         items(
             items = animalList ?: emptyList(),
@@ -148,6 +149,16 @@ fun BreedsList(animalList: List<Breed>?, breedClicked: (Breed) -> Unit = {}) {
             }
         )
     }
+   /* LazyRow(
+        modifier = Modifier.fillMaxWidth()
+    ) {
+        items(
+            items = animalList ?: emptyList(),
+            itemContent = { item ->
+                BreedItem(item, breedClicked)
+            }
+        )
+    }*/
 }
 
 @SuppressLint("ResourceType")
@@ -171,7 +182,8 @@ fun BreedItem(breed: Breed, breedClicked: (Breed) -> Unit = {}) {
         NetworkImage(
             url = breed.image ?: "",
             modifier = Modifier
-                .width(200.dp)
+                .fillMaxWidth()
+                .align(alignment = Alignment.Center)
                 .height(130.dp)
                 .clip(RoundedCornerShape(15.dp)),
             circularRevealedEnabled = true,
@@ -190,8 +202,7 @@ fun BreedItem(breed: Breed, breedClicked: (Breed) -> Unit = {}) {
                 .background(
                     color = Color(0xAA000000),
                     shape = RoundedCornerShape(bottomStart = 15.dp, bottomEnd = 15.dp)
-                )
-                .requiredWidth(200.dp)
+                ).fillMaxWidth()
                 .align(alignment = Alignment.BottomCenter)
                 .padding(5.dp)
         )

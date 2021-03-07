@@ -12,6 +12,7 @@ import kotlinx.coroutines.flow.flowOn
 class AnimalRepository(private val mNetworkDataSource: NetworkDataSource) {
 
     companion object {
+        val TAG = AnimalRepository::class.simpleName
         const val NUM_ITEMS_FIRST_LOAD = 6
     }
 
@@ -19,7 +20,7 @@ class AnimalRepository(private val mNetworkDataSource: NetworkDataSource) {
      * GET ANIMAL LIST
      **********************************************************************************************/
     suspend fun getAnimalList(): Response<List<Breed>?> {
-        android.util.Log.d("Animalrepository", "getAnimalList")
+        android.util.Log.d(TAG, "getAnimalList")
         val response = mNetworkDataSource.getAnimalList()
         if (response is Response.Success) {
             return  Response.Success(response.data)
@@ -31,7 +32,7 @@ class AnimalRepository(private val mNetworkDataSource: NetworkDataSource) {
      * GET BREED LIST FLOW
      **********************************************************************************************/
     suspend fun getAnimalListFlow() = flow<Response<List<Breed>?>> {
-        android.util.Log.d("Animalrepository", "getBreedsListFlow")
+        android.util.Log.d(TAG, "getBreedsListFlow")
         val response = mNetworkDataSource.getAnimalList()
         //emit(response)
         if (response is Response.Success) {
@@ -46,7 +47,7 @@ class AnimalRepository(private val mNetworkDataSource: NetworkDataSource) {
             for ((index, breed) in it.withIndex()) {
                 val response = mNetworkDataSource.getAnimalImage(breed.name)
                 if (response is Response.Success) {
-                    android.util.Log.d("Animalrepository", "getBreedImage ${response.data}")
+                    android.util.Log.d(TAG, "getBreedImage ${response.data}")
                     it[index].image = response.data ?: ""
                     if (index > NUM_ITEMS_FIRST_LOAD) {
                         emit(Response.Success(it))

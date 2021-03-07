@@ -47,8 +47,6 @@ class MainActivity : AppCompatActivity() {
         super.onCreate(savedInstanceState)
         setContent {
             MyTheme {
-                homeViewModel.getAnimalListFlow()
-
                 val currentScreen: Screen by navigationViewModel.currentScreen.observeAsState(Screen.BreedsList)
                 MyApp(currentScreen = currentScreen,
                     homeViewModel = homeViewModel,
@@ -58,6 +56,7 @@ class MainActivity : AppCompatActivity() {
                     onBackPressed = {onBackPressed()})
             }
         }
+        homeViewModel.getAnimalListFlow()
     }
 
     override fun onBackPressed() {
@@ -75,13 +74,11 @@ fun MyApp(currentScreen: Screen = Screen.BreedsList,
           onBackPressed: () -> Unit) {
 
     Surface(color = MaterialTheme.colors.background) {
-        Log.d("BreedClicked", "CurrentScreen: $currentScreen")
         when (currentScreen) {
             is Screen.BreedDetails -> BreedDetailsComposable((currentScreen as Screen.BreedDetails).breed) {
                 onBackPressed.invoke()
             }
-
-            Screen.BreedsList -> HomeComposable(homeViewModel, breedClicked = breedClicked)
+            is Screen.BreedsList -> HomeComposable(homeViewModel, breedClicked = breedClicked)
         }
     }
 }
